@@ -1,0 +1,11 @@
+node_modules/
+build/release/
+build/work/
+service/node_modules/
+service/*.db
+service/*.db-shm
+service/*.db-wal
+service/*.json
+service/*.log
+service/*.exe
+.openai/

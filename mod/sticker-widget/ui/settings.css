@@ -1,0 +1,14 @@
+.schedule-component[data-component-id="sticker-widget:sticker-settings"] { display: flex; flex-direction: column; gap: 12px; }
+.sticker-settings-heading { margin: 8px 0 0; color: var(--base02); font-size: 16px; font-weight: 720; }
+.sticker-settings-card { flex: none; }
+.sticker-settings-copy { min-width: 0; }
+.sticker-settings-copy p { overflow-wrap: anywhere; }
+.sticker-settings-copy .sticker-directory { font-family: ui-monospace, Consolas, monospace; font-size: 11px; }
+.sticker-open-directory { flex: none; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--base3); color: var(--base02); cursor: pointer; }
+.sticker-open-directory:hover, .sticker-open-directory:focus-visible { background: var(--base2); outline: none; }
+.sticker-border-setting { cursor: pointer; }
+.sticker-border-setting span { display: flex; flex-direction: column; gap: 5px; }
+.sticker-border-setting small { color: var(--base00); font-size: 12px; }
+.sticker-border-setting input { width: 20px; height: 20px; flex: none; accent-color: var(--cyan); cursor: pointer; }
+.sticker-settings-status { min-height: 18px; margin: 0; color: var(--base00); font-size: 12px; }
+@media (max-width: 650px) { .sticker-settings-card { flex-wrap: wrap; } }

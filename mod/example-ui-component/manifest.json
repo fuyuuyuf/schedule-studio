@@ -1,0 +1,22 @@
+{
+  "id": "example-ui-component",
+  "name": "提醒页替换示例",
+  "version": "1.0.0",
+  "apiVersion": "1",
+  "description": "演示如何替换软件中的提醒列表；默认关闭。",
+  "enabled": false,
+  "permissions": ["ui:components"],
+  "uiComponents": [
+    {
+      "id": "reminders-panel",
+      "name": "简洁提醒面板",
+      "description": "使用统一组件 SDK 读取提醒。",
+      "surface": "desktop",
+      "slot": "desktop.reminders",
+      "mode": "replace",
+      "html": "ui/reminders.html",
+      "css": "ui/reminders.css",
+      "module": "ui/reminders.js"
+    }
+  ]
+}

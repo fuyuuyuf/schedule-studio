@@ -1,0 +1,22 @@
+{
+  "id": "calendar-widget",
+  "name": "待机日历组件",
+  "version": "1.0.0",
+  "apiVersion": "1",
+  "description": "在待机页创建可移动、可缩放的月历，并高亮显示有日程的日期。",
+  "enabled": true,
+  "permissions": ["ui:components", "schedules:read"],
+  "uiComponents": [
+    {
+      "id": "standby-calendar",
+      "name": "待机页日历",
+      "description": "右键待机页空白处，通过“创建组件 → 日历”添加月历。",
+      "surface": "web",
+      "kind": "WEB_STANDBY",
+      "mode": "append",
+      "html": "ui/calendar.html",
+      "css": "ui/calendar.css",
+      "module": "ui/calendar.js"
+    }
+  ]
+}

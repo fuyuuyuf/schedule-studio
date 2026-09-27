@@ -1,0 +1,5 @@
+.example-reminders { display: grid; gap: 16px; padding: 20px; border: 1px solid var(--line); background: var(--card-bg); color: var(--base02); }
+.example-caption { margin: 0; color: var(--cyan); font-size: 12px; font-weight: 700; }
+.example-open { width: fit-content; padding: 9px 14px; border: 0; background: var(--cyan); color: var(--base3); }
+.example-list { display: grid; gap: 8px; color: var(--base01); }
+.example-item { padding: 10px; border-left: 3px solid var(--cyan); background: var(--base3); }

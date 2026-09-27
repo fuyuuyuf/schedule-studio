@@ -1,0 +1,10 @@
+{
+  "id": "example-plugin",
+  "name": "示例插件",
+  "version": "1.0.0",
+  "apiVersion": "1",
+  "description": "插件开发模板，默认关闭；复制目录并设置 enabled 为 true 后加载。",
+  "main": "index.mjs",
+  "enabled": false,
+  "permissions": ["schedules:read", "events:subscribe", "storage", "http:route"]
+}

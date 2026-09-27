@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN" data-component-surface="web">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#fdf6e3" />
+  <meta name="description" content="一款使用 Solarized 主题的本地日程管理网页" />
+  <title>日程 · 本地时间管理</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23002b36'/%3E%3Cpath d='M9 8v3M23 8v3M7 13h18M10 18h5v5h-5z' fill='none' stroke='%232aa198' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./styles.css" />
+  <style id="uploadedThemeStyle"></style>
+</head>
+<body>
+  <main id="app" class="app-shell" aria-live="polite">
+    <section id="standbyView" class="standby-view view active" aria-label="待机页">
+      <header class="standby-header">
+        <p id="standbyDate" class="eyebrow"></p>
+        <button id="openWeekButton" class="icon-button" type="button" aria-label="打开详细日程" title="打开详细日程（Tab）">↗</button>
+      </header>
+      <div class="clock-wrap">
+        <div id="standbyClock" class="standby-clock" role="timer" aria-label="当前时间"><span id="clockHours">21</span><span id="clockColon" class="clock-colon" aria-hidden="true">:</span><span id="clockMinutes">37</span></div>
+      </div>
+      <div id="stickyWall" class="sticky-wall" aria-label="便签墙"></div>
+      <div class="standby-bottom">
+      <p class="clock-label">接下来</p>
+      <div id="nextTasks" class="next-tasks"></div>
+      </div>
+    </section>
+
+    <section id="weekView" class="week-view view" aria-label="连续日程表">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">日程时间轴</p>
+          <button id="weekJumpButton" class="week-jump-button" type="button" aria-label="选择跳转日期和时间" aria-expanded="false" aria-controls="jumpCalendar"><h1 id="weekTitle">2026年9月</h1><span aria-hidden="true">▾</span></button>
+        </div>
+        <div class="topbar-actions">
+          <button id="todayButton" class="text-button" type="button">定位今天</button>
+          <button id="closeWeekButton" class="icon-button" type="button" aria-label="返回待机页" title="返回待机页（Tab）">↙</button>
+        </div>
+      </header>
+      <div id="jumpCalendar" class="jump-calendar" role="dialog" aria-label="选择跳转日期和时间" hidden>
+        <div class="jump-calendar-head"><strong>跳转到</strong><button id="closeJumpCalendar" type="button" aria-label="关闭日期选择">×</button></div>
+        <div id="jumpCalendarGrid"></div>
+        <div class="jump-time-row"><label for="jumpTime">时间</label><input id="jumpTime" type="time" step="900" /><button id="confirmJump" type="button">跳转</button></div>
+      </div>
+      <div class="calendar-frame">
+        <div id="weekHeader" class="week-header"></div>
+        <div id="timeline" class="timeline"></div>
+      </div>
+      <nav id="modeDock" class="mode-dock" aria-label="视图模式">
+        <button id="editModeButton" class="mode-button active" type="button" data-mode="edit" aria-label="编辑模式" title="编辑模式"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m4 18 10.9-10.9a2.1 2.1 0 0 1 3 3L7 21H4v-3Z"/><path d="M13.5 8.5 16 11M13 21h8"/></svg></button>
+        <button id="markModeButton" class="mode-button" type="button" data-mode="mark" aria-label="标注模式" title="标注模式"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 17.2 14.5 6.7l2.8 2.8L6.8 20H4v-2.8Zm11.7-11.7 1.4-1.4a1.8 1.8 0 0 1 2.5 0l.3.3a1.8 1.8 0 0 1 0 2.5l-1.4 1.4-2.8-2.8ZM12.5 20h8v1.6h-8z"/></svg></button>
+        <button id="openSoftwareButton" class="mode-button" type="button" aria-label="打开软件主界面" title="打开软件主界面"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="1.5"/><path d="M8 21h8M12 18v3"/></svg></button>
+      </nav>
+      <div id="eventHoverNote" class="event-hover-note markdown-preview" role="tooltip" hidden></div>
+      <div class="gesture-tip">日期栏滚轮浏览 · 右键日期管理当日日程 · 右键空白处添加 · 拖动选择时段</div>
+    </section>
+
+    <aside id="detailPanel" class="side-panel detail-panel" aria-label="日程详细信息" aria-hidden="true">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">日程详情</p>
+          <h2 id="editorHeading">新建日程</h2>
+        </div>
+        <button class="icon-button small" data-close-editor type="button" aria-label="关闭编辑器">×</button>
+      </div>
+      <form id="eventForm" autocomplete="off">
+        <label class="field-label">颜色</label>
+        <div id="colorPicker" class="color-picker" role="radiogroup" aria-label="日程颜色"></div>
+        <label class="field-label" for="eventTitle">日程内容</label>
+        <input id="eventTitle" class="text-input" maxlength="80" placeholder="例如：专注写作" required />
+        <div class="date-bounds editor-date-bounds">
+          <label for="editorStartDate">开始日期<input id="editorStartDate" type="date" required /></label>
+          <label for="editorEndDate">结束日期<input id="editorEndDate" type="date" required /></label>
+        </div>
+        <div class="field-grid">
+          <button id="dateField" class="field-button" type="button"><span>日期</span><strong id="dateFieldValue"></strong></button>
+          <button id="timeField" class="field-button" type="button"><span>时间</span><strong id="timeFieldValue"></strong></button>
+        </div>
+        <label class="field-label" for="noteProxy">详细备注</label>
+        <button id="noteProxy" class="note-proxy" type="button"><span id="noteSummary">添加 Markdown 备注…</span><span>→</span></button>
+        <label class="reminder-toggle"><span>开启提醒</span><input id="reminderEnabled" type="checkbox" /></label>
+        <div id="reminderOptions" class="reminder-options" hidden>
+          <label>最后一天提前 <input id="reminderLeadValue" type="number" min="0" max="10080" value="10" /><select id="reminderLeadUnit"><option value="minute">分钟</option><option value="hour">小时</option></select>提醒</label>
+          <label id="reminderDaysRow" hidden>另在提前 <input id="reminderDays" type="number" min="0" max="365" value="0" /> 天提醒</label>
+          <p>跨天日程的时间提醒仅在结束当天生效。</p>
+        </div>
+        <label class="reminder-toggle"><span>重复日程</span><input id="recurrenceEnabled" type="checkbox" /></label>
+        <div id="recurrenceOptions" class="recurrence-options" hidden>
+          <label>每 <input id="recurrenceInterval" type="number" min="1" max="365" value="1" /><select id="recurrenceFrequency"><option value="daily">天</option><option value="weekly">周</option><option value="monthly">月</option><option value="yearly">年</option></select>重复</label>
+          <label>结束于 <input id="recurrenceUntil" type="date" /></label>
+          <div id="recurrenceWeekdays" class="recurrence-weekdays" hidden aria-label="每周重复日期">
+            <label><input type="checkbox" value="1" />一</label><label><input type="checkbox" value="2" />二</label><label><input type="checkbox" value="3" />三</label><label><input type="checkbox" value="4" />四</label><label><input type="checkbox" value="5" />五</label><label><input type="checkbox" value="6" />六</label><label><input type="checkbox" value="7" />日</label>
+          </div>
+          <p>未填写结束日期时会持续重复；接口按查询日期窗口按需展开。</p>
+        </div>
+        <div class="form-actions">
+          <button id="deleteButton" class="danger-button" type="button">删除</button>
+          <button class="secondary-button" data-close-editor type="button">取消</button>
+          <button class="primary-button" type="submit">保存日程</button>
+        </div>
+      </form>
+    </aside>
+
+    <aside id="assistPanel" class="side-panel assist-panel" aria-label="辅助编辑区" aria-hidden="true">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">辅助编辑</p>
+          <h2 id="assistHeading">选择时间</h2>
+        </div>
+      </div>
+      <div id="timeAssist" class="assist-content"></div>
+      <div id="dateAssist" class="assist-content hidden"></div>
+      <div id="noteAssist" class="assist-content hidden"></div>
+    </aside>
+
+    <div id="dateContextMenu" class="date-context-menu" role="menu" aria-label="日期操作" hidden>
+      <span id="dateMenuLabel" class="date-menu-label"></span>
+      <div id="dayMarkColors" class="day-mark-colors" aria-label="日期背景色"></div>
+      <button id="clearDayMark" type="button" role="menuitem">清除日期颜色</button>
+      <button id="deleteDayEvents" type="button" role="menuitem">清空当天内容</button>
+    </div>
+
+    <div id="stickyContextMenu" class="date-context-menu sticky-context-menu" role="menu" aria-label="便签操作" hidden>
+      <div class="sticky-create-group"><button id="createStickyNote" type="button" role="menuitem">＋ 创建标签 <span>▾</span></button><div id="stickyColorOptions" class="sticky-color-options" aria-label="选择标签颜色"></div></div>
+      <button id="clearStickyNotes" type="button" role="menuitem">清空便签</button>
+    </div>
+
+    <div id="toast" class="toast" role="status"></div>
+    <div id="reminderToast" class="reminder-toast" role="alert" hidden></div>
+  </main>
+  <script type="module" src="./bootstrap.js"></script>
+</body>
+</html>

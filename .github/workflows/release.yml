@@ -1,0 +1,43 @@
+name: Build Windows release
+
+on:
+  push:
+    branches: [main]
+    paths: [build/release-version.txt]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows-installer:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install service dependencies
+        run: npm ci --prefix service
+      - name: Build installer and optional plugin archives
+        shell: pwsh
+        run: |
+          $tag = (Get-Content build/release-version.txt -Raw).Trim()
+          ./build/build-installer.ps1 -ReleaseTag $tag
+          & "build/release/ScheduleStudio-Setup-$tag.exe" --verify
+          if ($LASTEXITCODE -ne 0) { throw 'Installer resource verification failed.' }
+      - name: Publish GitHub Release assets
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tag = (Get-Content build/release-version.txt -Raw).Trim()
+          $assets = @(Get-ChildItem build/release -File | ForEach-Object { $_.FullName })
+          if ($assets.Count -ne 5) { throw "Expected five assets, found $($assets.Count)." }
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -eq 0) {
+            & gh release upload $tag @assets --clobber
+          } else {
+            & gh release create $tag @assets --target $env:GITHUB_SHA --title "本地日程 $tag" --notes "Windows 安装包：可选择安装目录，并按需联网下载额外插件。"
+          }
+          if ($LASTEXITCODE -ne 0) { throw 'GitHub Release upload failed.' }

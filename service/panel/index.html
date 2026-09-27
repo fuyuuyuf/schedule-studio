@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN" data-component-surface="desktop">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#fdf6e3" />
+  <title>本地日程 · 提醒中心</title>
+  <link rel="icon" href="http://127.0.0.1:3456/tray.png" />
+  <link rel="stylesheet" href="http://127.0.0.1:3456/planned.css" />
+  <link rel="stylesheet" href="http://127.0.0.1:3456/components-page.css" />
+  <style id="uploadedThemeStyle"></style>
+</head>
+<body>
+  <main id="appRoot" class="app-root">
+    <aside id="sidebar" class="sidebar" aria-label="软件导航">
+      <button id="logoButton" class="side-logo" type="button" title="打开日程网页" aria-label="打开日程网页"><img src="http://127.0.0.1:3456/tray.png" alt="" /><span>本地日程</span></button>
+      <div class="side-divider"></div>
+      <button id="themeToggle" class="side-button" type="button" title="切换深浅色" aria-label="当前浅色，点击切换到深色"><svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg><svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 15.2A8.5 8.5 0 0 1 8.8 4 8.5 8.5 0 1 0 20 15.2Z"/></svg><span>切换深浅色</span></button>
+      <nav id="sidebarNavigation" class="sidebar-navigation" aria-label="功能页面">
+      <button id="remindersNav" class="side-button active" data-page="reminders" type="button" aria-label="显示提醒" title="显示提醒"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg><span>显示提醒</span><b id="navCount" class="nav-count">0</b></button>
+      <button id="componentsNav" class="side-button" data-page="components" type="button" aria-label="组件" title="组件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.8 2.1-2.3-2.3 2.1-2.8Z"/></svg><span>组件</span></button>
+      <button id="settingsNav" class="side-button" data-page="settings" type="button" aria-label="设置" title="设置"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M9.8 2.5h4.4l.7 2.1 1.7.7 2-1 3.1 3.1-1 2 .7 1.7 2.1.7v4.4l-2.1.7-.7 1.7 1 2-3.1 3.1-2-1-1.7.7-.7 2.1H9.8l-.7-2.1-1.7-.7-2 1-3.1-3.1 1-2-.7-1.7-2.1-.7v-4.4l2.1-.7.7-1.7-1-2 3.1-3.1 2 1 1.7-.7.7-2.1Z" transform="translate(2.5 2.5) scale(.79)"/></svg><span>设置</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+      <button id="collapseSidebar" class="side-button" type="button" aria-label="收起侧栏" title="收起侧栏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m15 5-7 7 7 7"/></svg><span>收起侧栏</span></button>
+      <button id="hideWindow" class="side-button" type="button" aria-label="隐藏到托盘" title="隐藏到托盘"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12h16"/></svg><span>隐藏到托盘</span></button>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <header class="workspace-header"><div><p class="eyebrow">本地日程 · 提醒中心</p><h1 id="pageTitle">已规划提醒</h1></div><span id="totalCount" class="count" aria-label="待提醒数量">0</span></header>
+
+      <section id="remindersPage" class="page">
+        <div class="page-actions"><button id="openSchedule" class="primary-action" type="button">打开日程网页 ↗</button><button id="refresh" class="quiet-action" type="button" aria-label="刷新提醒列表" title="刷新提醒列表">↻</button></div>
+        <p id="statusLine" class="status-line">正在读取本机提醒…</p>
+        <div id="reminderList" class="reminder-list" aria-live="polite"></div>
+      </section>
+
+      <section id="componentsPage" class="page components-page" hidden>
+        <p class="section-intro">额外插件放进根目录 <code>mod</code> 后可在此启用。同一类型一次只能启用一个替换组件。</p>
+        <div class="component-section-heading"><h2>组件</h2><button id="refreshComponents" type="button">刷新</button></div>
+        <div class="component-section-heading"><h2>扩展组件</h2></div>
+        <div id="extensionComponents" class="component-list"></div>
+        <div class="component-section-heading"><h2>额外插件</h2></div>
+        <div id="installedPlugins" class="component-list"></div>
+        <details class="builtin-details"><summary>显示内置组件</summary><div id="builtinComponents" class="component-list"></div></details>
+        <p id="componentStatus" class="settings-hint" role="status">正在读取组件…</p>
+      </section>
+
+      <section id="settingsPage" class="page settings-page" hidden>
+        <p class="section-intro">这里的设置同时应用于日程网页与提醒窗口。</p>
+        <div class="setting-card"><div><strong>基础颜色</strong><p>浅色、深色，或跟随系统。</p></div><select id="appearanceSelect" aria-label="基础颜色"><option value="light">浅色</option><option value="dark">深色</option><option value="system">跟随系统</option></select></div>
+        <div class="setting-card"><div><strong>反转日期滚轮方向</strong><p>开启后，上滚日期后退，下滚日期前进。</p></div><input id="reverseWheel" type="checkbox" /></div>
+        <div class="setting-card theme-setting"><div><strong>主题文件</strong><p id="themeName">Solarized</p></div><div class="theme-actions"><button id="chooseThemeFile" type="button">选择 CSS</button><button id="chooseThemeFolder" type="button">选择文件夹</button><button id="resetTheme" type="button">恢复默认</button></div></div>
+        <div id="themeDropZone" class="theme-drop-zone" tabindex="0">也可以把主题 CSS 或文件夹拖到这里</div>
+        <p id="themeStatus" class="settings-hint" role="status">主题仅保存在这台设备上。</p>
+        <div class="setting-card danger-setting"><div><strong>清空所有数据</strong><p>删除本机日程、提醒、便签、已放置贴纸、日期标记、设置和插件数据；贴纸图片与插件文件仍保留。</p></div><button id="clearAllData" type="button">清空数据</button></div>
+        <dialog id="clearDataDialog" class="clear-data-dialog" aria-labelledby="clearDataTitle"><h2 id="clearDataTitle">确认清空所有数据？</h2><p>此操作无法撤销。日程、提醒、便签、已放置贴纸和设置都会删除；贴纸图片与插件文件会保留。</p><div><button id="cancelClearData" type="button">取消</button><button id="confirmClearData" type="button">确定清空</button></div><p id="clearDataStatus" role="status"></p></dialog>
+        <input id="themeFileInput" type="file" accept=".css,text/css" hidden />
+        <input id="themeFolderInput" type="file" webkitdirectory directory multiple hidden />
+      </section>
+
+      <footer>提醒由本机托盘程序管理 · 关闭窗口后仍会在后台运行</footer>
+    </section>
+  </main>
+  <script type="module" src="http://127.0.0.1:3456/planned.js"></script>
+  <script type="module" src="http://127.0.0.1:3456/components-runtime.js"></script>
+</body>
+</html>

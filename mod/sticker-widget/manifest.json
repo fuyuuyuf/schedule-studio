@@ -1,0 +1,34 @@
+{
+  "id": "sticker-widget",
+  "name": "待机贴纸组件",
+  "version": "1.0.0",
+  "apiVersion": "1",
+  "description": "从 texture 目录选择贴纸放到待机页，并在设置中配置白边。",
+  "main": "index.mjs",
+  "enabled": true,
+  "permissions": ["ui:components", "http:route", "storage"],
+  "uiComponents": [
+    {
+      "id": "standby-stickers",
+      "name": "待机页贴纸",
+      "description": "在待机页右键创建、拖动及删除贴纸。",
+      "surface": "web",
+      "kind": "WEB_STANDBY",
+      "mode": "append",
+      "html": "ui/stickers.html",
+      "css": "ui/stickers.css",
+      "module": "ui/stickers.js"
+    },
+    {
+      "id": "sticker-settings",
+      "name": "贴纸组件设置",
+      "description": "打开贴纸目录并配置白边。",
+      "surface": "desktop",
+      "kind": "DESKTOP_SETTINGS",
+      "mode": "append",
+      "html": "ui/settings.html",
+      "css": "ui/settings.css",
+      "module": "ui/settings.js"
+    }
+  ]
+}

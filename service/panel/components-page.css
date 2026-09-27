@@ -1,0 +1,24 @@
+.components-page { gap: 12px; overflow: auto; max-height: calc(100vh - 172px); padding-right: 4px; }
+.components-page code { color: var(--cyan); font-size: .95em; }
+.component-section-heading { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+.component-section-heading h2 { margin: 0; font-size: 15px; color: var(--base02); }
+.component-section-heading button { border: 1px solid var(--line); border-radius: 8px; padding: 5px 10px; background: var(--base3); }
+.component-list { display: grid; gap: 8px; }
+.component-card { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 13px 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--card-bg); }
+.component-card--blocked { opacity: .48; }
+.component-info { min-width: 0; }
+.component-info strong { color: var(--base03); font-size: 13px; }
+.component-info p { margin: 4px 0; color: var(--base00); font-size: 11px; }
+.component-info small { color: var(--base1); font-size: 10px; overflow-wrap: anywhere; }
+.component-info .component-error { color: var(--orange); }
+.component-controls { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 9px; flex: none; }
+.component-select { min-width: 142px; max-width: 210px; padding: 6px; border: 1px solid var(--line); border-radius: 8px; background: var(--base3); color: var(--base02); font-size: 11px; }
+.builtin-details { margin-top: 8px; border-top: 1px solid var(--line); padding-top: 10px; }
+.builtin-details summary { cursor: pointer; color: var(--base00); font-size: 12px; }
+.builtin-details .component-list { margin-top: 10px; }
+.component-controls input[type='checkbox'] { width: 19px; height: 19px; margin: 0; accent-color: var(--cyan); }
+.component-lock, .plugin-status { color: var(--base1); font-size: 10px; white-space: nowrap; }
+.status-active { color: var(--cyan); }
+.status-failed { color: var(--orange); }
+.component-empty { margin: 0; padding: 12px; color: var(--base00); border: 1px dashed var(--line); font-size: 11px; }
+@media (max-width: 760px) { .component-card { align-items: start; flex-direction: column; } .component-controls { justify-content: start; } }
